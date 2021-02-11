@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 });
 
 require("./routes/congregation.js")(app);
-
+require("./routes/room.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
@@ -34,6 +34,6 @@ const db = require("./models");
 
 db.sequelize.sync();
 
-db.sequelize.sync({ force: true}).then(() => {
-  console.log("Drop and re-sync db.");
-});
+// db.sequelize.sync({ force: true}).then(() => {
+//   console.log("Drop and re-sync db.");
+// });

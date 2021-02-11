@@ -1,6 +1,7 @@
 const dbConfig = require("../config/db.config.js");
 
-const Sequelize = require("sequelize");
+const Sequelize = require('sequelize');
+
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
@@ -15,11 +16,19 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 });
 const db = {};
 
-db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
 
 db.congregations = require("./congregation.js")(sequelize, Sequelize);
-
+db.rooms = require("./room.js")(sequelize, Sequelize);
+//for one to many relationship between congregation to rooms
+//db.congregations.hasMany(db.rooms, { as: "rooms" });
+db.rooms.belongsTo(db.congregations, {
+  foreignKey: "CongregationId",
+  allowNull: false,
+  as: "congregations",
+});
 
 
 module.exports = db;
