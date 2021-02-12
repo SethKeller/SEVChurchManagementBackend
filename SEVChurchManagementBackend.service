@@ -1,0 +1,13 @@
+[Unit]
+Description=NodeJS Church Management System
+After=network.target
+ 
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/nodeapps/SEVChurchManagementBackend/
+ExecStart=/usr/bin/npm run start
+Restart=on-failure
+ 
+[Install]
+WantedBy=multi-user.target
