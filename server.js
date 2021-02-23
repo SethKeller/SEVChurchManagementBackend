@@ -23,6 +23,10 @@ app.get("/", (req, res) => {
 
 require("./routes/congregation.js")(app);
 require("./routes/room.js")(app);
+require("./routes/address.js")(app);
+require("./routes/event.js")(app);
+require("./routes/person.js")(app);
+require("./routes/family.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
