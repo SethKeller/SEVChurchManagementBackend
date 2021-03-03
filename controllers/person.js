@@ -115,12 +115,14 @@ exports.delete = (req, res) => {
             });
         });
 };
-exports.search = (req, res) => {
+exports.searchByAll = (req, res) => {
   
   console.log(req.query);
-  let queryArr = req.query['q'].split(" "); 
+  let queryStr = req.query['q'];
+  let queryArr = queryStr.split(" "); 
 
   Person.findAll({
+    include: "familys",
     where: {
       [Op.or]: [
         { FirstName: {[Op.substring]: queryArr[0]} },
@@ -129,7 +131,48 @@ exports.search = (req, res) => {
         { LastName: {[Op.substring]: queryArr[1]} },
         { email: {[Op.substring]: queryArr[0]} },
         { phone: {[Op.substring]: queryArr[0]} },
+        { "$familys.FamilyName$": {[Op.substring]: queryStr} }
       ]
+    }})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occured when search."
+    })
+  })
+};
+exports.searchByEmail = (req, res) => {
+  
+  console.log(req.query);
+  let queryStr = req.query['q'];
+
+  Person.findAll({
+    include: "familys",
+    where: {
+      email: {[Op.substring]: queryStr} 
+    }})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occured when search."
+    })
+  })
+};
+exports.searchByFamily = (req, res) => {
+  
+  console.log(req.query);
+  let queryStr = req.query['q'];
+
+  Person.findAll({
+    include: "familys",
+    where: {
+      "$familys.FamilyName$": {[Op.substring]: queryStr} 
     }})
   .then(data => {
     res.send(data);

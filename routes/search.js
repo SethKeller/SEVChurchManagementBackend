@@ -4,7 +4,11 @@ module.exports = app => {
   var router = require("express").Router();
 
   // Retrieve all Persons with name 
-  router.get("/person", persons.search);
+  router.get("/person", persons.searchByAll);
+
+  router.get("/personemail", persons.searchByEmail);
+
+  router.get("/personfamily", persons.searchByFamily);
 
   app.use('/api/search', router);
 };
