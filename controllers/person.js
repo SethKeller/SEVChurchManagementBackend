@@ -1,9 +1,10 @@
+const { query } = require("express");
 const db = require("../models");
 const Person = db.persons;
 const Congregation = db.congregations;
 const Event = db.events;
 const Family = db.familys;
-
+const { Op } = require("sequelize");
 
 exports.create = (req, res) => {
     // Validate request
@@ -113,4 +114,30 @@ exports.delete = (req, res) => {
                 message: "Could not delete Person with id=" + id
             });
         });
+};
+exports.search = (req, res) => {
+  
+  console.log(req.query);
+  let queryArr = req.query['q'].split(" "); 
+
+  Person.findAll({
+    where: {
+      [Op.or]: [
+        { FirstName: {[Op.substring]: queryArr[0]} },
+        { FirstName: {[Op.substring]: queryArr[1]} },
+        { LastName: {[Op.substring]: queryArr[0]} },
+        { LastName: {[Op.substring]: queryArr[1]} },
+        { email: {[Op.substring]: queryArr[0]} },
+        { phone: {[Op.substring]: queryArr[0]} },
+      ]
+    }})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occured when search."
+    })
+  })
 };
