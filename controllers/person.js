@@ -129,8 +129,8 @@ exports.searchByAll = (req, res) => {
         { FirstName: {[Op.substring]: queryArr[1]} },
         { LastName: {[Op.substring]: queryArr[0]} },
         { LastName: {[Op.substring]: queryArr[1]} },
-        { email: {[Op.substring]: queryArr[0]} },
-        { phone: {[Op.substring]: queryArr[0]} },
+        { Email: {[Op.substring]: queryStr} },
+        { Phone: {[Op.substring]: queryStr} },
         { "$familys.FamilyName$": {[Op.substring]: queryStr} }
       ]
     }})
