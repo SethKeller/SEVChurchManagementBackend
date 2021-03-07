@@ -20,6 +20,7 @@ exports.create = (req, res) => {
         LastName: req.body.LastName,
         DisplayName:  req.body.DisplayName,
         DateofBirth: req.body.DateofBirth,
+        Phone: req.body.Phone,
         Email: req.body.Email,
         HousePhone: req.body.HousePhone,
         Password: req.body.Password,
