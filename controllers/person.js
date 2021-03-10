@@ -1,9 +1,10 @@
+const { query } = require("express");
 const db = require("../models");
 const Person = db.persons;
 const Congregation = db.congregations;
 const Event = db.events;
 const Family = db.familys;
-
+const { Op } = require("sequelize");
 
 exports.create = (req, res) => {
     // Validate request
@@ -114,4 +115,73 @@ exports.delete = (req, res) => {
                 message: "Could not delete Person with id=" + id
             });
         });
+};
+exports.searchByAll = (req, res) => {
+  
+  console.log(req.query);
+  let queryStr = req.query['q'];
+  let queryArr = queryStr.split(" "); 
+
+  Person.findAll({
+    include: "familys",
+    where: {
+      [Op.or]: [
+        { FirstName: {[Op.substring]: queryArr[0]} },
+        { FirstName: {[Op.substring]: queryArr[1]} },
+        { LastName: {[Op.substring]: queryArr[0]} },
+        { LastName: {[Op.substring]: queryArr[1]} },
+        { Email: {[Op.substring]: queryStr} },
+        { Phone: {[Op.substring]: queryStr} },
+        { "$familys.FamilyName$": {[Op.substring]: queryStr} }
+      ]
+    }})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occured when search."
+    })
+  })
+};
+exports.searchByEmail = (req, res) => {
+  
+  console.log(req.query);
+  let queryStr = req.query['q'];
+
+  Person.findAll({
+    include: "familys",
+    where: {
+      email: {[Op.substring]: queryStr} 
+    }})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occured when search."
+    })
+  })
+};
+exports.searchByFamily = (req, res) => {
+  
+  console.log(req.query);
+  let queryStr = req.query['q'];
+
+  Person.findAll({
+    include: "familys",
+    where: {
+      "$familys.FamilyName$": {[Op.substring]: queryStr} 
+    }})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occured when search."
+    })
+  })
 };
