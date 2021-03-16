@@ -1,6 +1,6 @@
 const db = require("../models");
-const ROLES = db.ROLES;
 const Person = db.persons;
+const Role = db.role;
 
 checkDuplicateEmail = (req, res, next) => {
   // Username
@@ -21,17 +21,29 @@ checkDuplicateEmail = (req, res, next) => {
 };
 
 checkRolesExisted = (req, res, next) => {
-  if (req.body.roles) {
-    for (let i = 0; i < req.body.roles.length; i++) {
-      if (!ROLES.includes(req.body.roles[i])) {
-        res.status(400).send({
-          message: "Failed! Role does not exist = " + req.body.roles[i]
-        });
-        return;
+  let ROLES = [];
+  Role.findAll()
+    .then(data => {
+      ROLES = data.map(d => d.Name);
+    })
+    .then(() => {
+      if (req.body.roles) {
+        for (let i = 0; i < req.body.roles.length; i++) {
+          if (!ROLES.includes(req.body.roles[i])) {
+            res.status(400).send({
+              message: "Failed! Role does not exist = " + req.body.roles[i]
+            });
+            return;
+          }
+        }
       }
-    }
-  }
-  
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error retrieving roles"
+      })
+    })
+
   next();
 };
 
