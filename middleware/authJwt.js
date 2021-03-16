@@ -27,7 +27,7 @@ isAdmin = (req, res, next) => {
   Person.findByPk(req.personId).then(person => {
     person.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "admin") {
+        if (roles[i].Name === "admin") {
           next();
           return;
         }
