@@ -48,7 +48,7 @@ db.persons.belongsTo(db.congregations, {
   allowNull: false,
   as: "congregations",
 });
-
+db.familys.hasMany(db.persons, { as: "people" });
 db.persons.belongsTo(db.familys, {
   foreignKey: "FamilyId",
   allowNull: false,
