@@ -26,9 +26,7 @@ db.familys = require("./family.js")(sequelize, Sequelize);
 db.persons = require("./person.js")(sequelize, Sequelize);
 db.events = require("./event.js")(sequelize, Sequelize);
 db.addresses = require("./address.js")(sequelize, Sequelize);
-
-
-
+db.role = require("./role.js")(sequelize, Sequelize);
 
 //for one to many relationship between congregation to rooms
 //db.congregations.hasMany(db.rooms, { as: "rooms" });
@@ -78,7 +76,16 @@ db.persons.belongsTo(db.events, {
   as: "events",
 });
 
+db.role.belongsToMany(db.persons, {
+  through: "person_roles",
+  foreignKey: "roleId",
+  otherKey: "personId"
+});
 
-
+db.persons.belongsToMany(db.role, {
+  through: "person_roles",
+  foreignKey: "personId",
+  otherKey: "roleId"
+});
 
 module.exports = db;
