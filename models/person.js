@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING
       },
       DateofBirth: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       Email: {
         type: Sequelize.STRING
