@@ -16,10 +16,11 @@ exports.create = (req, res) => {
     }
 
     // Create a Congregation
-    const person = {
+    var person = {
         FirstName: req.body.FirstName,
         LastName: req.body.LastName,
         DisplayName:  req.body.DisplayName,
+        Picture: req.body.Picture,
         DateofBirth: req.body.DateofBirth,
         Phone: req.body.Phone,
         Email: req.body.Email,
@@ -30,8 +31,8 @@ exports.create = (req, res) => {
         EventId : req.body.EventId,
         FamilyRole : req.body.FamilyRole
 
-
     };
+    person = this.setPlaceholderPicture(person); // Set placeholder picture if nonexistent
 
     // Save Congregation in the database
     Person.create(person)
@@ -45,9 +46,13 @@ exports.create = (req, res) => {
             });
         });
 };
+
 exports.findAll = (req, res) => {
     Person.findAll({include: [ "congregations","familys", "events"] })
         .then(data => {
+            data.forEach(person => {
+                person = this.setPlaceholderPicture(person); // Set placeholder picture if nonexistent
+            });
             res.send(data);
         })
         .catch(err => {
@@ -57,11 +62,13 @@ exports.findAll = (req, res) => {
             });
         });
 };
+
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
     Person.findByPk(id,{include: [ "congregations","familys", "events"]  })
         .then(data => {
+            data = this.setPlaceholderPicture(data); // Set placeholder picture if nonexistent
             res.send(data);
         })
         .catch(err => {
@@ -70,9 +77,12 @@ exports.findOne = (req, res) => {
             });
         });
 };
+
 exports.update = (req, res) => {
     const id = req.params.id;
-
+    
+    req.body = this.setPlaceholderPicture(req.body); // Set placeholder picture if nonexistent
+    
     Person.update(req.body, {
         where: { id: id }
     })
@@ -93,6 +103,7 @@ exports.update = (req, res) => {
             });
         });
 };
+
 exports.delete = (req, res) => {
     const id = req.params.id;
 
@@ -116,6 +127,7 @@ exports.delete = (req, res) => {
             });
         });
 };
+
 exports.searchByAll = (req, res) => {
   
   console.log(req.query);
@@ -136,6 +148,9 @@ exports.searchByAll = (req, res) => {
       ]
     }})
   .then(data => {
+    data.forEach(person => {
+        person = this.setPlaceholderPicture(person); // Set placeholder picture if nonexistent
+    });
     res.send(data);
   })
   .catch(err => {
@@ -145,6 +160,7 @@ exports.searchByAll = (req, res) => {
     })
   })
 };
+
 exports.searchByEmail = (req, res) => {
   
   console.log(req.query);
@@ -156,6 +172,9 @@ exports.searchByEmail = (req, res) => {
       email: {[Op.substring]: queryStr} 
     }})
   .then(data => {
+    data.forEach(person => {
+        person = this.setPlaceholderPicture(person); // Set placeholder picture if nonexistent
+    });
     res.send(data);
   })
   .catch(err => {
@@ -165,6 +184,7 @@ exports.searchByEmail = (req, res) => {
     })
   })
 };
+
 exports.searchByFamily = (req, res) => {
   
   console.log(req.query);
@@ -176,6 +196,9 @@ exports.searchByFamily = (req, res) => {
       "$familys.FamilyName$": {[Op.substring]: queryStr} 
     }})
   .then(data => {
+    data.forEach(person => {
+        person = this.setPlaceholderPicture(person); // Set placeholder picture if nonexistent
+    });
     res.send(data);
   })
   .catch(err => {
@@ -185,3 +208,13 @@ exports.searchByFamily = (req, res) => {
     })
   })
 };
+
+// Set a placeholder picture for a person (used if no picture has been added)
+exports.setPlaceholderPicture = (person) => {
+    if (person.Picture == null || person.Picture == undefined) {
+        person.Picture = Math.random() > 0.5
+            ? "https://qph.fs.quoracdn.net/main-thumb-247285578-200-hzqdjetzezpphiwkjnrnsynmdtylybjy.jpeg"
+            : "https://images.squarespace-cdn.com/content/v1/588921712e69cfac18fe17a2/1510150601760-T6D3J73PH8NMMQMYXLIS/ke17ZwdGBToddI8pDm48kNiEM88mrzHRsd1mQ3bxVct7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0s0XaMNjCqAzRibjnE_wBlkZ2axuMlPfqFLWy-3Tjp4nKScCHg1XF4aLsQJlo6oYbA/Jolie_020+Square.jpg";
+    }
+    return person;
+}

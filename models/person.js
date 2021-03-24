@@ -9,6 +9,9 @@ module.exports = (sequelize, Sequelize) => {
       DisplayName: {
         type: Sequelize.STRING
       },
+      Picture: {
+          type: Sequelize.STRING
+      },
       DateofBirth: {
         type: Sequelize.DATEONLY
       },
