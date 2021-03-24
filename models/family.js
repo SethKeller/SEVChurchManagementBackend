@@ -3,7 +3,9 @@ module.exports = (sequelize, Sequelize) => {
       FamilyName: {
         type: Sequelize.STRING
       },
-      
+      Picture: {
+        type: Sequelize.STRING
+      }
     
     }, { timestamps: false });
   
