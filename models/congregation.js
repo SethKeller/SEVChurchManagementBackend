@@ -15,9 +15,7 @@ module.exports = (sequelize, Sequelize) => {
       StreetAddress:{
         type: Sequelize.STRING
       },
-      MailingAddress:{
-        type: Sequelize.STRING
-      },
+      
       Phone: {
         type: Sequelize.STRING
       }

@@ -16,12 +16,13 @@ exports.create = (req, res) => {
 
     // Create a Address
     const address = {
-        City : req.body.City,
+        City: req.body.City,
         HouseNumber: req.body.HouseNumber,
+        Street: req.body.Street,
         State: req.body.State,
         Zipcode: req.body.Zipcode,
         Active: req.body.Active,
-        PersonId : req.body.PersonId,
+        PersonId: req.body.PersonId,
 
 
     };
@@ -39,7 +40,11 @@ exports.create = (req, res) => {
         });
 };
 exports.findAll = (req, res) => {
-    Address.findAll({include: [ "people"] })
+    Address.findAll({
+        where: {
+            Active: 1
+        }, include: ["people"]
+    })
         .then(data => {
             res.send(data);
         })
@@ -50,10 +55,31 @@ exports.findAll = (req, res) => {
             });
         });
 };
+
+exports.findByPersonId = (req, res) => {
+    const personId = req.params.id;
+    Address.findAll({
+        where: {
+            PersonId: personId,
+            Active: 1,
+        }
+    }).then(data => {
+        res.send(data);
+    }).catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving Addresses ."
+        });
+    });
+};
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Address.findByPk(id,{include: [ "people"] })
+    Address.findByPk(id, {
+        where: {
+            Active: 1
+        }, include: ["people"]
+    })
         .then(data => {
             res.send(data);
         })
