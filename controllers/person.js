@@ -209,6 +209,33 @@ exports.searchByFamily = (req, res) => {
   })
 };
 
+// Update the picture for a person
+exports.updatePicture = (req, res) => {
+    // Temporary references:
+    // https://www.npmjs.com/package/express-fileupload
+    // stackoverflow - 'how to upload, display and save images using node.js and express'
+    
+    const id = req.params.id;
+    
+    // Check that there was actually a file in the request
+    if (!req.files || Object.keys(req.files).length === 0)
+        return res.status(400).send('No file was uploaded');
+    
+    // Set up the file and save path (format: /pictures/member/<id#>.<ext>)
+    file = req.files.pictureFile;
+    uploadPath = "./pictures/member/" + id + file.name.slice(file.name.lastIndexOf("."));
+    
+    // Save the file and send back the URL
+    file.mv(uploadPath, function(err) {
+        if (err)
+            return res.status(500).send(err);
+        
+        // TODO - update person.Picture in the database
+        console.log("Saved '" + file.name + "' to '" + uploadPath + "'");
+        res.send(uploadPath.slice(1));
+    });
+}
+
 // Set a placeholder picture for a person (used if no picture has been added)
 exports.setPlaceholderPicture = (person) => {
     if (person.Picture == null || person.Picture == undefined) {
