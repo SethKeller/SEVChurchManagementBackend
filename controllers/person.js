@@ -209,12 +209,49 @@ exports.searchByFamily = (req, res) => {
   })
 };
 
+// Update the picture for a person
+exports.updatePicture = (req, res) => {
+    const id = req.params.id;
+    
+    // Check that there was actually a file in the request
+    if (!req.files || Object.keys(req.files).length === 0)
+        return res.status(400).send('No file was uploaded');
+    
+    // Set up the file and save path (format: /pictures/member/<id#>.<ext>)
+    file = req.files.pictureFile;
+    uploadPath = "./pictures/member/" + id + file.name.slice(file.name.lastIndexOf("."));
+    
+    // Save the file and send back the URL
+    file.mv(uploadPath, function(err) {
+        if (err)
+            return res.status(500).send(err);
+        
+        var savedPath = uploadPath.slice(1);
+        
+        // Update the person's picture in the database
+        Person.update(
+          { Picture: savedPath },
+          { where: { id: id } }
+        )
+            .then(result => {}) // Update success
+            .catch(err => {
+                console.error("Cannot update person " + id + "'s picture:");
+                console.error(err);
+            });
+        
+        // Finish up and send back the save path
+        console.log("[Picture Upload] Saved '" + file.name + "' to '" + uploadPath + "'");
+        res.send(savedPath);
+    });
+}
+
 // Set a placeholder picture for a person (used if no picture has been added)
 exports.setPlaceholderPicture = (person) => {
     if (person.Picture == null || person.Picture == undefined) {
-        person.Picture = Math.random() > 0.5
-            ? "https://qph.fs.quoracdn.net/main-thumb-247285578-200-hzqdjetzezpphiwkjnrnsynmdtylybjy.jpeg"
-            : "https://images.squarespace-cdn.com/content/v1/588921712e69cfac18fe17a2/1510150601760-T6D3J73PH8NMMQMYXLIS/ke17ZwdGBToddI8pDm48kNiEM88mrzHRsd1mQ3bxVct7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0s0XaMNjCqAzRibjnE_wBlkZ2axuMlPfqFLWy-3Tjp4nKScCHg1XF4aLsQJlo6oYbA/Jolie_020+Square.jpg";
+        person.Picture = "/pictures/member/default.png";
+        // Old placeholders:
+        // (male) "https://qph.fs.quoracdn.net/main-thumb-247285578-200-hzqdjetzezpphiwkjnrnsynmdtylybjy.jpeg"
+        // (female) "https://images.squarespace-cdn.com/content/v1/588921712e69cfac18fe17a2/1510150601760-T6D3J73PH8NMMQMYXLIS/ke17ZwdGBToddI8pDm48kNiEM88mrzHRsd1mQ3bxVct7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0s0XaMNjCqAzRibjnE_wBlkZ2axuMlPfqFLWy-3Tjp4nKScCHg1XF4aLsQJlo6oYbA/Jolie_020+Square.jpg";
     }
     return person;
 }
