@@ -34,6 +34,8 @@ require("./routes/event.js")(app);
 require("./routes/person.js")(app);
 require("./routes/family.js")(app);
 require("./routes/search.js")(app);
+require('./routes/auth')(app);
+require('./routes/authorize-example')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
