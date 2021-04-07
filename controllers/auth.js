@@ -16,8 +16,6 @@ exports.signup = (req, res) => {
   })
     .then(person => {
       if (req.body.Roles) {
-        
-        console.log("req.body.Roles: " + req.body.Roles);
         Role.findAll({
           where: {
             Name: {
