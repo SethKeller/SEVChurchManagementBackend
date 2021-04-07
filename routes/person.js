@@ -19,7 +19,7 @@ module.exports = app => {
     router.delete("/:id", persons.delete);
     
     // Upload a new picture for a Person
-    router.post("/picture/:id", persons.updatePicture);
+    router.post("/:id/picture", persons.updatePicture);
   
     app.use('/api/persons', router);
   };
