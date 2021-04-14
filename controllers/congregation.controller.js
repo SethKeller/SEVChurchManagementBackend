@@ -17,7 +17,7 @@ exports.create = (req, res) => {
         City: req.body.City,
         StreetAddress: req.body.StreetAdress,
         State: req.body.State,
-        MailingAddress: req.body.MailingAddress,
+        //MailingAddress: req.body.MailingAddress,
         Phone: req.body.Phone
     };
 

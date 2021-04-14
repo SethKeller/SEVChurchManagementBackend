@@ -52,10 +52,10 @@ db.persons.belongsTo(db.familys, {
   allowNull: false,
   as: "familys",
 });
-
+db.persons.hasMany(db.addresses, { as: "addresses" });
 db.addresses.belongsTo(db.persons, {
   foreignKey: "PersonId",
-  allowNull: false,
+  allowNull: true,
   as: "people",
 });
 

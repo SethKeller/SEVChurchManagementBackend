@@ -31,7 +31,9 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-    Family.findAll({include: [ "congregations","people"] })
+  
+
+    Family.findAll({ include: { all: true, nested: true }})
         .then(data => {
             res.send(data);
         })
@@ -46,7 +48,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Family.findByPk(id,{include: [ "congregations","people"] })
+    Family.findByPk(id,{ include: { all: true, nested: true }})
         .then(data => {
             res.send(data);
         })
