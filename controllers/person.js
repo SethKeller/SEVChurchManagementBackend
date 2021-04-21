@@ -15,7 +15,7 @@ exports.create = (req, res) => {
         return;
     }
 
-    // Create a Congregation
+    // Create a Person
     var person = {
         FirstName: req.body.FirstName,
         LastName: req.body.LastName,
@@ -34,7 +34,7 @@ exports.create = (req, res) => {
     };
     person = this.setPlaceholderPicture(person); // Set placeholder picture if nonexistent
 
-    // Save Congregation in the database
+    // Save Person in the database
     Person.create(person)
         .then(data => {
             res.send(data);
