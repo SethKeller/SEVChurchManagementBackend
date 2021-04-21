@@ -15,7 +15,9 @@ exports.create = (req, res) => {
     const family = {
         FamilyName : req.body.FamilyName,
         CongregationId: req.body.CongregationId,
+        Picture: req.body.Picture
     };
+    family = this.setPlaceholderPicture(family); // Set placeholder picture if nonexistent
 
     // Save family in the database
     Family.create(family)
@@ -35,6 +37,9 @@ exports.findAll = (req, res) => {
 
     Family.findAll({ include: { all: true, nested: true }})
         .then(data => {
+            data.forEach(family => {
+                family = this.setPlaceholderPicture(family); // Set placeholder picture if nonexistent
+            });
             res.send(data);
         })
         .catch(err => {
@@ -50,6 +55,7 @@ exports.findOne = (req, res) => {
 
     Family.findByPk(id,{ include: { all: true, nested: true }})
         .then(data => {
+            data = this.setPlaceholderPicture(data); // Set placeholder picture if nonexistent
             res.send(data);
         })
         .catch(err => {
@@ -61,6 +67,8 @@ exports.findOne = (req, res) => {
 
 exports.update = (req, res) => {
     const id = req.params.id;
+    
+    req.body = this.setPlaceholderPicture(req.body); // Set placeholder picture if nonexistent
 
     Family.update(req.body, {
         where: { id: id }
@@ -145,9 +153,8 @@ exports.updatePicture = (req, res) => {
 
 // Set a placeholder picture for a family (used if no picture has been added)
 exports.setPlaceholderPicture = (family) => {
-    // TODO - apply placeholder in DB functions above
     if (family.Picture == null || family.Picture == undefined) {
-        family.Picture = "/pictures/member/default.png"; // Re-use member default image
+        family.Picture = "/pictures/family/default.png";
     }
     return family;
 }
