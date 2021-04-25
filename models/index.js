@@ -27,6 +27,8 @@ db.persons = require("./person.js")(sequelize, Sequelize);
 db.events = require("./event.js")(sequelize, Sequelize);
 db.addresses = require("./address.js")(sequelize, Sequelize);
 db.role = require("./role.js")(sequelize, Sequelize);
+db.groups = require("./group")(sequelize, Sequelize);
+db.groupPersons = require("./groupPerson")(sequelize, Sequelize);
 
 //for one to many relationship between congregation to rooms
 //db.congregations.hasMany(db.rooms, { as: "rooms" });
@@ -44,8 +46,28 @@ db.familys.belongsTo(db.congregations, {
 db.persons.belongsTo(db.congregations, {
   foreignKey: "CongregationId",
   allowNull: false,
+  CONSTRAINT: false,
   as: "congregations",
 });
+db.groups.belongsTo(db.congregations, {
+  foreignKey: "CongregationId",
+  allowNull: false,
+  as: "congregations",
+});
+db.groupPersons.belongsTo(db.groups, {
+  foreignKey: "GroupId",
+  allowNull: false,
+  CONSTRAINT:false,
+  as: "groups",
+});
+db.persons.hasMany(db.groupPersons, { as: "groupPersons" });
+db.groupPersons.belongsTo(db.persons, {
+  foreignKey: "PersonId",
+  allowNull: false,
+  CONSTRAINT: false,
+  as: "people",
+});
+
 db.familys.hasMany(db.persons, { as: "people" });
 db.persons.belongsTo(db.familys, {
   foreignKey: "FamilyId",
@@ -56,6 +78,7 @@ db.persons.hasMany(db.addresses, { as: "addresses" });
 db.addresses.belongsTo(db.persons, {
   foreignKey: "PersonId",
   allowNull: true,
+  CONSTRAINT:false,
   as: "people",
 });
 
@@ -79,6 +102,7 @@ db.persons.belongsTo(db.events, {
 db.role.belongsToMany(db.persons, {
   through: "person_roles",
   foreignKey: "roleId",
+ 
   otherKey: "personId"
 });
 

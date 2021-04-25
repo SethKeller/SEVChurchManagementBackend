@@ -1,6 +1,5 @@
 const db = require("../models");
-const Family = db.familys;
-const Addres =db.addresses;
+const Group = db.groups;
 
 
 exports.create = (req, res) => {
@@ -12,112 +11,95 @@ exports.create = (req, res) => {
         return;
     }
 
-    // Create a family
-    const family = {
-        FamilyName : req.body.FamilyName,
-        CongregationId: req.body.CongregationId,
+    // Create a groups
+    const group = {
+        Name : req.body.Name,
+        Type: req.body.Type,
+        CongregationId:req.body.CongregationId
        
 
     };
 
-    // Save family in the database
-    Family.create(family)
+    // Save Groups in the database
+    Group.create(group)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the family."
+                    err.message || "Some error occurred while creating the Address."
             });
         });
 };
 exports.findAll = (req, res) => {
-  
-
-    Family.findAll({ include: { all: true, nested: true }})
+    Group.findAll()
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving family ."
+                    err.message || "Some error occurred while retrieving gropus."
             });
         });
-};
-exports.findByPersonId = (req, res) => {
-    const personId = req.params.id;
-    Family.findAll({
-        where: {
-            PersonId: personId,
-            
-        }
-    }).then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving Addresses ."
-        });
-    });
-};
-exports.findOne = (req, res) => {
+  };
+  exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Family.findByPk(id,{ include: { all: true, nested: true }})
+    Group.findByPk(id)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving family with id=" + id
+                message: "Error retrieving a group with id=" + id
             });
         });
 };
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Family.update(req.body, {
+    Group.update(req.body, {
         where: { id: id }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "was ufamily pdated successfully."
+                    message: "Groups was updated successfully."
                 });
             } else {
                 res.send({
-                    message: `Cannot update Family with id=${id}. Maybe Family was not found or req.body is empty!`
+                    message: `Cannot update Groups with id=${id}. Maybe Groups was not found or req.body is empty!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating Family with id=" + id
+                message: "Error updating Group with id=" + id
             });
         });
 };
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Family.destroy({
+    Group.destroy({
         where: { id: id }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Family was deleted successfully!"
+                    message: "groups was deleted successfully!"
                 });
             } else {
                 res.send({
-                    message: `Cannot delete Family with id=${id}. Maybe Family was not found!`
+                    message: `Cannot delete group with id=${id}. Maybe Group was not found!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete Family with id=" + id
+                message: "Could not delete Groups with id=" + id
             });
         });
 };

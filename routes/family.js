@@ -8,7 +8,7 @@ module.exports = app => {
     router.post("/", familys.create);
     //Retrieve all Family
     router.get("/", familys.findAll);
-   
+    router.get("/personId/:id", familys.findByPersonId);
     // Retrieve a single Family with id
     router.get("/:id", familys.findOne);
   
