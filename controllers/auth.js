@@ -38,13 +38,13 @@ exports.signup = (req, res) => {
           }
         }).then(roles => {
           person.setRoles(roles).then(() => {
-            res.send({ message: `${person.FirstName} ${person.LastName} was registered successfully!`, data });
+            res.send({ message: `${person.FirstName} ${person.LastName} was registered successfully!`, person });
           });
         });
       } else {
         // person role = 1
         person.setRoles([1]).then(() => {
-          res.send({ message: `${person.FirstName} ${person.LastName} was registered successfully!`, data });
+          res.send({ message: `${person.FirstName} ${person.LastName} was registered successfully!`, person });
         });
       }
     })
