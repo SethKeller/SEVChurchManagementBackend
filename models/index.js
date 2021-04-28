@@ -46,30 +46,18 @@ db.persons.belongsTo(db.congregations, {
   allowNull: false,
   as: "congregations",
 });
-db.familys.hasMany(db.persons, { as: "people" });
+db.familys.hasMany(db.persons, { foreignKey: "FamilyId", as: "people" });
 db.persons.belongsTo(db.familys, {
   foreignKey: "FamilyId",
   allowNull: false,
   as: "familys",
 });
-db.persons.hasMany(db.addresses, { as: "addresses" });
+db.persons.hasMany(db.addresses, { foreignKey: "PersonId", as: "addresses" });
 db.addresses.belongsTo(db.persons, {
   foreignKey: "PersonId",
   allowNull: true,
   as: "people",
 });
-
-// db.addresses.belongsTo(db.familys, {
-//   foreignKey: "FamilyId",
-//   allowNull: false,
-//   as: "familys",
-// });
-
-// db.familys.belongsTo(db.addresses, {
-//   foreignKey: "AddressId",
-//   allowNull: false,
-//   as: "addresses",
-// });
 db.persons.belongsTo(db.events, {
   foreignKey: "EventId",
   allowNull: false,
