@@ -1,8 +1,5 @@
 const db = require("../models");
-
-//const family = db.familys;
-const Address = db.addresses;
-const Person = db.persons;
+const GroupPerson = db.groupPersons;
 
 
 exports.create = (req, res) => {
@@ -14,21 +11,15 @@ exports.create = (req, res) => {
         return;
     }
 
-    // Create a Address
-    const address = {
-        City: req.body.City,
-        HouseNumber: req.body.HouseNumber,
-        Street: req.body.Street,
-        State: req.body.State,
-        Zipcode: req.body.Zipcode,
-        Active: req.body.Active,
-        PersonId: req.body.PersonId,
-
-
+    // Create a GroupPersons
+    const groupPerson = {
+        Leader: req.body.Leader,
+        personId: req.body.PersonId,
+        GroupId: req.body.GroupId
     };
 
-    // Save Address in the database
-    Address.create(address)
+    // Save GroupPersons in the database
+    GroupPerson.create(groupPerson)
         .then(data => {
             res.send(data);
         })
@@ -40,29 +31,37 @@ exports.create = (req, res) => {
         });
 };
 exports.findAll = (req, res) => {
-    Address.findAll({
-        where: {
-            Active: 1
-        }, include: ["people"]
-    })
+    GroupPerson.findAll( {include: [ "people","groups" ]})
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving Addresses ."
+                    err.message || "Some error occurred while retrieving group person."
+            });
+        });
+  };
+  exports.findOne = (req, res) => {
+    const id = req.params.id;
+ 
+    GroupPerson.findByPk(id, {include: [ "people","groups" ]})
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error retrieving a GroupPerson with id=" + id
             });
         });
 };
-
 exports.findByPersonId = (req, res) => {
     const personId = req.params.id;
-    Address.findAll({
+    GroupPerson.findAll({
         where: {
             PersonId: personId,
-            Active: 1,
-        }
+            
+        }, include: [ "groups" ]
     }).then(data => {
         res.send(data);
     }).catch(err => {
@@ -72,66 +71,66 @@ exports.findByPersonId = (req, res) => {
         });
     });
 };
-exports.findOne = (req, res) => {
-    const id = req.params.id;
-
-    Address.findByPk(id, {
+exports.findByGroupId = (req, res) => {
+    const groupId = req.params.id;
+    GroupPerson.findAll({
         where: {
-            Active: 1
-        }, include: ["people"]
-    })
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error retrieving Adresses with id=" + id
-            });
+            GroupId: groupId,
+            
+        }, include: [ "people" ]
+    }).then(data => {
+        res.send(data);
+    }).catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving the group person ."
         });
+    });
 };
+
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Address.update(req.body, {
+    GroupPerson.update(req.body, {
         where: { id: id }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Address was updated successfully."
+                    message: "GroupPersons was updated successfully."
                 });
             } else {
                 res.send({
-                    message: `Cannot update Address with id=${id}. Maybe Address was not found or req.body is empty!`
+                    message: `Cannot update GroupPersons with id=${id}. Maybe GroupPersons was not found or req.body is empty!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating Address with id=" + id
+                message: "Error updating GroupPerson with id=" + id
             });
         });
 };
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Address.destroy({
+    GroupPerson.destroy({
         where: { id: id }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Address was deleted successfully!"
+                    message: "GroupPersons was deleted successfully!"
                 });
             } else {
                 res.send({
-                    message: `Cannot delete Address with id=${id}. Maybe Address was not found!`
+                    message: `Cannot delete GroupPerson with id=${id}. Maybe GroupPerson was not found!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete Address with id=" + id
+                message: "Could not delete GroupPersons with id=" + id
             });
         });
 };

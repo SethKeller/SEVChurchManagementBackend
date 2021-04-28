@@ -14,7 +14,10 @@ exports.create = (req, res) => {
     // Create a Congregation
     const congregation = {
         Name: req.body.Name,
-        Address: req.body.Address,
+        City: req.body.City,
+        StreetAddress: req.body.StreetAdress,
+        State: req.body.State,
+        //MailingAddress: req.body.MailingAddress,
         Phone: req.body.Phone
     };
 

@@ -11,6 +11,7 @@ module.exports = app => {
    
     // Retrieve a single Address with id
     router.get("/:id", addresses.findOne);
+    router.get("/personId/:id", addresses.findByPersonId);
   
     // Update a Address with id
     router.put("/:id", addresses.update);

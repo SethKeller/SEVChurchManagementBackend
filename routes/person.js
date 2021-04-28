@@ -4,8 +4,8 @@ module.exports = app => {
     var router = require("express").Router();
   
     // Create a new Person
-    
     router.post("/", persons.create);
+    
     // Retrieve all Persons
     router.get("/", persons.findAll);
    
@@ -17,7 +17,9 @@ module.exports = app => {
   
     // Delete a Person with id
     router.delete("/:id", persons.delete);
-  
+    
+    // Upload a new picture for a Person
+    router.post("/:id/picture", persons.updatePicture);
   
     app.use('/api/persons', router);
   };

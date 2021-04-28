@@ -1,13 +1,15 @@
 module.exports = (sequelize, Sequelize) => {
-    const Family = sequelize.define("family", {
-      FamilyName: {
+    const Group = sequelize.define("groups", {
+      Name: {
         type: Sequelize.STRING
       },
-      Picture: {
+      Type: {
         type: Sequelize.STRING
-      }
+      },
+
+
     
     }, { timestamps: false });
   
-    return Family;
+    return Group;
   };
