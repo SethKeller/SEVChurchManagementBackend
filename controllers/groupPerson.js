@@ -14,7 +14,7 @@ exports.create = (req, res) => {
     // Create a GroupPersons
     const groupPerson = {
         Leader: req.body.Leader,
-        PersonId: req.body.PersonId,
+        personId: req.body.PersonId,
         GroupId: req.body.GroupId
     };
 
