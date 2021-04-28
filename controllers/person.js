@@ -48,7 +48,26 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-    Person.findAll({include: [ "congregations","familys", "events","addresses"] })
+    Person.findAll({include: [ "congregations", "events","groupPersons"] })
+        .then(data => {
+            data.forEach(person => {
+                person = this.setPlaceholderPicture(person); // Set placeholder picture if nonexistent
+            });
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving People ."
+            });
+        });
+};
+exports.findHeadOfFamily = (req, res) => {
+    Person.findAll({
+        where: {
+            FamilyRole:1
+        }, include:[ "congregations", "events",]})
+    
         .then(data => {
             data.forEach(person => {
                 person = this.setPlaceholderPicture(person); // Set placeholder picture if nonexistent
@@ -66,7 +85,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Person.findByPk(id,{include: [ "congregations","familys", "events", "addresses"]  })
+    Person.findByPk(id,{include: [ "congregations", "addresses"]  })
         .then(data => {
             data = this.setPlaceholderPicture(data); // Set placeholder picture if nonexistent
             res.send(data);

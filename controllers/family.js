@@ -50,6 +50,23 @@ exports.findAll = (req, res) => {
         });
 };
 
+exports.findByPersonId = (req, res) => {
+    const personId = req.params.id;
+    Family.findAll({
+        where: {
+            PersonId: personId,
+            
+        }
+    }).then(data => {
+        res.send(data);
+    }).catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving Addresses ."
+        });
+    });
+};
+
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
