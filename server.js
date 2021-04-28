@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 
 const app = express();
 
@@ -15,6 +16,11 @@ app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// allow uploading and accessing image files
+app.use(fileUpload());
+app.use('/pictures/member', express.static('pictures/member')); // static file hosting
+app.use('/pictures/family', express.static('pictures/family')); // static file hosting
 
 // simple route
 app.get("/", (req, res) => {

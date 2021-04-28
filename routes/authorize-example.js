@@ -2,6 +2,8 @@ const { authJwt } = require("../middleware");
 const controller = require("../controllers/test-access");
 
 module.exports = function(app) {
+  var router = require("express").Router();
+
   app.use(function(req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
@@ -10,17 +12,19 @@ module.exports = function(app) {
     next();
   });
 
-  app.get("/api/test/all", controller.allAccess);
+  router.get("/all", controller.allAccess);
 
-  app.get(
-    "/api/test/user",
+  router.get(
+    "/user",
     [authJwt.verifyToken],
     controller.userBoard
   );
 
-  app.get(
-    "/api/test/admin",
+  router.get(
+    "/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );
+
+  app.use('/api/test', router);
 };
