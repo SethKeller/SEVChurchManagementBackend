@@ -12,7 +12,7 @@ exports.create = (req, res) => {
     }
 
     // Create a family
-    const family = {
+    let family = {
         FamilyName : req.body.FamilyName,
         CongregationId: req.body.CongregationId,
         Picture: req.body.Picture
